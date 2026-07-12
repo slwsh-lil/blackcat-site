@@ -33,16 +33,7 @@ a{text-decoration:none;color:inherit}
 /* Particles */
 #particles{position:fixed;inset:0;pointer-events:none;z-index:0}
 
-/* Oneko */
-#oneko{
-    position:fixed;width:64px;height:64px;
-    background-image:url('../images/oneko_black_cat.png');
-    background-size:256px 192px;background-position:0 0;
-    pointer-events:none;z-index:9999;
-    image-rendering:pixelated;
-    filter:drop-shadow(0 2px 6px rgba(155,89,182,.4));
-    transition:none;
-}
+/* Oneko - handled by oneko.js */
 
 /* Nav */
 .nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(8,9,13,.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);transition:var(--tr)}
@@ -164,7 +155,6 @@ cite{display:block;font-family:var(--fp);font-size:.75rem;color:var(--txt2);marg
     .cards-grid,.gallery,.facts-grid,.contact-cards{grid-template-columns:1fr}
     .footer-c{flex-direction:column;text-align:center}
     .section{padding:50px 16px}
-    #oneko{display:none}
     .hero-float-cat{display:none}
 }
 @media(max-width:480px){
