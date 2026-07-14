@@ -1,6 +1,6 @@
 /* ============================================
-   BLACK CAT V2 - Professional Scripts
-   Oneko Cat + Particles + Scroll
+   BLACK CAT V3 - Professional Scripts
+   Oneko Cat + Particles + Scroll + Hero 3D Interaction
    ============================================ */
 
 // ---- Particles ----
@@ -44,6 +44,113 @@
 
 // ---- Oneko handled by oneko.js ----
 
+// ---- Hero 3D Interaction ----
+!function(){
+    const obj = document.getElementById('hero3dObj');
+    const img = document.getElementById('hero3dImg');
+    if(!obj || !img) return;
+    
+    let mouseX = 0, mouseY = 0;
+    let currentX = 0, currentY = 0;
+    let scrollY = 0;
+    let animationId = null;
+    
+    // Configuration
+    const config = {
+        parallaxStrength: 15,      // Mouse parallax amount (px)
+        scrollRotation: 0.5,       // Rotation per 100px scroll (deg)
+        floatAmplitude: 8,         // Floating animation (px)
+        floatSpeed: 0.0015,        // Floating speed
+        easing: 0.08,              // Smooth follow easing
+        maxTilt: 8,                // Max tilt (deg)
+    };
+    
+    // Track mouse position
+    document.addEventListener('mousemove', (e) => {
+        const rect = obj.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
+        // Normalized mouse position (-1 to 1)
+        mouseX = ((e.clientX - centerX) / (rect.width / 2)) * config.parallaxStrength;
+        mouseY = ((e.clientY - centerY) / (rect.height / 2)) * config.parallaxStrength;
+        
+        // Clamp
+        mouseX = Math.max(-config.maxTilt, Math.min(config.maxTilt, mouseX));
+        mouseY = Math.max(-config.maxTilt, Math.min(config.maxTilt, mouseY));
+    });
+    
+    // Touch support
+    document.addEventListener('touchmove', (e) => {
+        const touch = e.touches[0];
+        const rect = obj.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
+        mouseX = ((touch.clientX - centerX) / (rect.width / 2)) * config.parallaxStrength;
+        mouseY = ((touch.clientY - centerY) / (rect.height / 2)) * config.parallaxStrength;
+        
+        mouseX = Math.max(-config.maxTilt, Math.min(config.maxTilt, mouseX));
+        mouseY = Math.max(-config.maxTilt, Math.min(config.maxTilt, mouseY));
+    }, { passive: true });
+    
+    // Track scroll for rotation
+    window.addEventListener('scroll', () => {
+        scrollY = window.scrollY;
+    });
+    
+    // Animation loop
+    function animate() {
+        const time = performance.now() * config.floatSpeed;
+        
+        // Smooth follow mouse (easing)
+        currentX += (mouseX - currentX) * config.easing;
+        currentY += (mouseY - currentY) * config.easing;
+        
+        // Floating animation
+        const floatY = Math.sin(time) * config.floatAmplitude;
+        const floatX = Math.cos(time * 0.7) * config.floatAmplitude * 0.5;
+        
+        // Scroll-based rotation
+        const scrollRot = (scrollY / 100) * config.scrollRotation;
+        
+        // Combine all transforms
+        const rotateX = -currentY + floatY * 0.3;
+        const rotateY = currentX + floatX * 0.3 + scrollRot;
+        const translateY = floatY;
+        const translateX = floatX;
+        
+        // Apply transform
+        img.style.transform = `
+            translateX(${translateX}px)
+            translateY(${translateY}px)
+            rotateX(${rotateX}deg)
+            rotateY(${rotateY}deg)
+        `;
+        
+        animationId = requestAnimationFrame(animate);
+    }
+    
+    // Start animation
+    animate();
+    
+    // Hover glow effect
+    obj.addEventListener('mouseenter', () => {
+        img.style.transition = 'filter 0.5s ease';
+        img.style.filter = 'drop-shadow(0 40px 80px rgba(0,0,0,.6)) drop-shadow(0 0 60px rgba(155,89,182,.4))';
+    });
+    
+    obj.addEventListener('mouseleave', () => {
+        img.style.transition = 'filter 0.8s ease';
+        img.style.filter = 'drop-shadow(0 30px 60px rgba(0,0,0,.5)) drop-shadow(0 0 40px rgba(155,89,182,.2))';
+    });
+    
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+        if (animationId) cancelAnimationFrame(animationId);
+    });
+}();
+
 // ---- Scroll Animations ----
 !function(){
     const obs=new IntersectionObserver(entries=>{
@@ -51,11 +158,11 @@
             if(e.isIntersecting)e.target.classList.add('animate-in');
         });
     },{threshold:.1,rootMargin:'0px 0px -40px 0px'});
-
     document.querySelectorAll('.card,.gal-item,.fact,.contact-card').forEach((el,i)=>{
         el.setAttribute('data-d',String(i%7));
         obs.observe(el);
     });
+}();
 }();
 
 // ---- Navigation ----

@@ -46,30 +46,129 @@ a{text-decoration:none;color:inherit}
 .nav-toggle{display:none;flex-direction:column;gap:4px;background:none;border:none;cursor:pointer;padding:8px}
 .nav-toggle span{width:22px;height:2px;background:var(--txt);border-radius:1px;transition:var(--tr)}
 
-/* Hero */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;padding:80px 24px 40px;overflow:hidden}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(155,89,182,.12) 0%,transparent 50%),radial-gradient(ellipse at 20% 80%,rgba(0,230,178,.06) 0%,transparent 40%);pointer-events:none}
-.hero-bg-cats{position:absolute;inset:0;pointer-events:none;opacity:.06}
-.hero-float-cat{position:absolute;width:64px;image-rendering:pixelated}
-.hf1{top:15%;left:10%;animation:float 6s ease-in-out infinite}
-.hf2{top:60%;right:8%;animation:float 8s ease-in-out infinite 1s}
-.hf3{bottom:20%;left:20%;animation:float 7s ease-in-out infinite 2s}
-.hero-c{text-align:center;position:relative;z-index:1}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;background:rgba(155,89,182,.12);border:1px solid rgba(155,89,182,.2);border-radius:999px;font-family:var(--fp);font-size:.75rem;color:var(--pri2);margin-bottom:20px;animation:pulse 3s infinite}
-.hero-title{font-family:var(--fp);font-size:clamp(1.8rem,4.5vw,3rem);line-height:1.5;margin-bottom:16px}
-.hero-title span{display:block}
-.hero-title .accent{color:var(--pri2);text-shadow:0 0 30px rgba(155,89,182,.3)}
-.hero-sub{font-family:var(--fp);font-size:1rem;color:var(--txt2);max-width:500px;margin:0 auto 28px;line-height:2}
-.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:36px}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:var(--r);font-family:var(--fp);font-size:.85rem;transition:var(--tr);border:none;cursor:pointer}
-.btn-p{background:linear-gradient(135deg,var(--pri),#7c3aed);color:#fff;box-shadow:0 4px 15px rgba(155,89,182,.25)}
-.btn-p:hover{transform:translateY(-2px);box-shadow:0 6px 25px rgba(155,89,182,.4)}
-.btn-s{background:transparent;color:var(--txt);border:1px solid var(--border);backdrop-filter:blur(8px)}
-.btn-s:hover{border-color:var(--pri);color:var(--pri2);background:rgba(155,89,182,.08)}
-.hero-cat{margin-top:10px}
-.hero-main-cat{width:100px;height:auto;filter:drop-shadow(0 0 12px rgba(155,89,182,.35))}
-.floating{animation:float 4s ease-in-out infinite}
-.scroll-hint{position:absolute;bottom:24px;display:flex;align-items:center;gap:8px;color:var(--txt3);font-family:var(--fp);font-size:.65rem;animation:float 2s ease-in-out infinite}
+/* ============================================
+   HERO 3D - Interactive 3D Object Effect
+   ============================================ */
+.hero3d{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    padding:80px 24px 40px;
+    overflow:hidden;
+}
+.hero3d::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:
+        radial-gradient(ellipse at 50% 0%,rgba(155,89,182,.15) 0%,transparent 50%),
+        radial-gradient(ellipse at 20% 80%,rgba(0,230,178,.08) 0%,transparent 40%),
+        radial-gradient(ellipse at 80% 20%,rgba(196,168,172,.06) 0%,transparent 35%);
+    pointer-events:none;
+}
+.hero3d-bg-glow{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:800px;
+    height:800px;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle,rgba(155,89,182,.08) 0%,transparent 70%);
+    pointer-events:none;
+    animation:pulse-slow 8s ease-in-out infinite;
+}
+.hero3d-content{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:60px;
+    align-items:center;
+    max-width:1200px;
+    width:100%;
+    position:relative;
+    z-index:1;
+}
+.hero3d-text{text-align:right}
+.hero3d-object{
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:500px;
+}
+.hero3d-shadow{
+    position:absolute;
+    bottom:-20px;
+    left:50%;
+    width:280px;
+    height:40px;
+    transform:translateX(-50%);
+    background:radial-gradient(ellipse,rgba(155,89,182,.15) 0%,transparent 70%);
+    filter:blur(20px);
+    animation:shadow-pulse 4s ease-in-out infinite;
+}
+.hero3d-img{
+    max-width:100%;
+    height:auto;
+    max-height:600px;
+    transform-origin:center center;
+    will-change:transform;
+    transition:transform 0.1s cubic-bezier(0.25,0.46,0.45,0.94);
+    filter:drop-shadow(0 30px 60px rgba(0,0,0,.5)) drop-shadow(0 0 40px rgba(155,89,182,.2));
+    image-rendering:auto;
+}
+.hero3d-glow{
+    position:absolute;
+    inset:0;
+    background:radial-gradient(circle at 50% 50%,rgba(155,89,182,.12) 0%,transparent 70%);
+    pointer-events:none;
+    opacity:0;
+    transition:opacity 0.5s ease;
+}
+.hero3d-object:hover .hero3d-glow{opacity:1}
+.hero3d-particles{
+    position:absolute;
+    inset:-20%;
+    pointer-events:none;
+    overflow:hidden;
+}
+.hero3d-particle{
+    position:absolute;
+    width:4px;
+    height:4px;
+    border-radius:50%;
+    background:var(--pri);
+    opacity:0;
+    animation:particle-float 6s ease-in-out infinite;
+}
+@keyframes particle-float{
+    0%{transform:translateY(100vh) scale(0);opacity:0}
+    10%{opacity:0.6}
+    90%{opacity:0.4}
+    100%{transform:translateY(-100vh) scale(1);opacity:0}
+}
+@keyframes pulse-slow{
+    0%,100%{transform:translate(-50%,-50%) scale(1);opacity:0.5}
+    50%{transform:translate(-50%,-50%) scale(1.15);opacity:0.3}
+}
+@keyframes shadow-pulse{
+    0%,100%{opacity:0.4;transform:translateX(-50%) scaleX(1)}
+    50%{opacity:0.2;transform:translateX(-50%) scaleX(0.8)}
+}
+
+/* Responsive for Hero 3D */
+@media(max-width:900px){
+    .hero3d-content{grid-template-columns:1fr;gap:40px;text-align:center}
+    .hero3d-text{order:2}
+    .hero3d-object{order:1;min-height:400px}
+    .hero3d-img{max-height:450px}
+}
+@media(max-width:480px){
+    .hero3d-img{max-height:350px}
+    .hero3d{padding:60px 16px 30px}
+}
 
 /* Sections */
 .section{padding:80px 24px;position:relative;z-index:1}
