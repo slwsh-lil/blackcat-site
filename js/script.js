@@ -163,7 +163,6 @@
         obs.observe(el);
     });
 }();
-}();
 
 // ---- Navigation ----
 !function(){
