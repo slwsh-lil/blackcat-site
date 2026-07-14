@@ -19,7 +19,7 @@ body{font-family:var(--fp);background:var(--bg);color:var(--txt);overflow-x:hidd
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--pri);border-radius:3px}
 ::selection{background:var(--pri);color:#fff}
-img{image-rendering:pixelated}
+img{image-rendering:auto;-webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-touch-callout:none}
 a{text-decoration:none;color:inherit}
 
 /* Pixel Icons */
@@ -238,6 +238,12 @@ cite{display:block;font-family:var(--fp);font-size:.75rem;color:var(--txt2);marg
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 rgba(155,89,182,0)}50%{box-shadow:0 0 16px rgba(155,89,182,.15)}}
 @keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes particle-float{
+    0%{transform:translateY(0) translateX(0);opacity:0}
+    20%{opacity:.6}
+    80%{opacity:.4}
+    100%{transform:translateY(-200px) translateX(50px);opacity:0}
+}
 
 .animate-in{animation:fadeInUp .5s ease forwards;opacity:0}
 .animate-in[data-d="1"]{animation-delay:.1s}
@@ -246,6 +252,14 @@ cite{display:block;font-family:var(--fp);font-size:.75rem;color:var(--txt2);marg
 .animate-in[data-d="4"]{animation-delay:.4s}
 .animate-in[data-d="5"]{animation-delay:.5s}
 .animate-in[data-d="6"]{animation-delay:.6s}
+
+/* Image Protection */
+img{
+    -webkit-user-select:none;-moz-user-select:none;user-select:none;
+    -webkit-touch-callout:none;-webkit-user-drag:none;
+    pointer-events:none;
+}
+.hero3d-img{pointer-events:auto !important}
 
 /* Responsive */
 @media(max-width:768px){

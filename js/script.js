@@ -220,4 +220,115 @@ document.querySelectorAll('.card,.gal-frame').forEach(c=>{
     });
 });
 
-console.log('%c🐈‍⬛ Black Cat V2 loaded!','color:#9b59b6;font-size:16px');
+console.log('%c🐈‍⬛ Black Cat V3 loaded!','color:#9b59b6;font-size:16px');
+
+// ---- Image Protection (anti-download) ----
+!function(){
+    // Disable right-click on images
+    document.addEventListener('contextmenu', function(e) {
+        if (e.target.tagName === 'IMG') {
+            e.preventDefault();
+            return false;
+        }
+    });
+    
+    // Disable drag on images
+    document.addEventListener('dragstart', function(e) {
+        if (e.target.tagName === 'IMG') {
+            e.preventDefault();
+            return false;
+        }
+    });
+    
+    // Disable save image via keyboard
+    document.addEventListener('keydown', function(e) {
+        // Ctrl+S (save)
+        if (e.ctrlKey && e.key === 's') {
+            e.preventDefault();
+            return false;
+        }
+        // Ctrl+Shift+I (dev tools)
+        if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+            e.preventDefault();
+            return false;
+        }
+        // F12 (dev tools)
+        if (e.key === 'F12') {
+            e.preventDefault();
+            return false;
+        }
+        // Ctrl+U (view source)
+        if (e.ctrlKey && e.key === 'u') {
+            e.preventDefault();
+            return false;
+        }
+    });
+    
+    // Disable image loading in new tab
+    document.addEventListener('click', function(e) {
+        if (e.target.tagName === 'IMG') {
+            e.preventDefault();
+            return false;
+        }
+    }, false);
+    
+    // Add protection overlay to all images
+    document.querySelectorAll('img').forEach(function(img) {
+        img.style.pointerEvents = 'none';
+        img.style.webkitUserDrag = 'none';
+    });
+    
+    console.log('Image protection enabled');
+}();
+
+// ---- Enhanced Hero Animations ----
+!function(){
+    const hero3dObj = document.getElementById('hero3dObj');
+    const hero3dImg = document.getElementById('hero3dImg');
+    if (!hero3dObj || !hero3dImg) return;
+    
+    // Entrance animation
+    hero3dImg.style.opacity = '0';
+    hero3dImg.style.transform = 'translateY(60px) scale(0.9)';
+    
+    setTimeout(function() {
+        hero3dImg.style.transition = 'opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)';
+        hero3dImg.style.opacity = '1';
+        hero3dImg.style.transform = 'translateY(0) scale(1)';
+    }, 300);
+    
+    // Text entrance animation
+    const textElements = document.querySelectorAll('.hero3d-text > *');
+    textElements.forEach(function(el, i) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        
+        setTimeout(function() {
+            el.style.transition = 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+        }, 200 + (i * 150));
+    });
+    
+    // Floating particles around hero object
+    const particleContainer = document.createElement('div');
+    particleContainer.className = 'hero3d-particles';
+    particleContainer.style.cssText = 'position:absolute;inset:-20%;pointer-events:none;overflow:hidden;';
+    hero3dObj.appendChild(particleContainer);
+    
+    for (let i = 0; i < 12; i++) {
+        const particle = document.createElement('div');
+        particle.style.cssText = `
+            position:absolute;
+            width:${Math.random() * 4 + 2}px;
+            height:${Math.random() * 4 + 2}px;
+            background:${['#9b59b6','#00e6b2','#c4a8ac','#7c9397'][Math.floor(Math.random()*4)]};
+            border-radius:50%;
+            left:${Math.random() * 100}%;
+            top:${Math.random() * 100}%;
+            opacity:0;
+            animation:particle-float ${5 + Math.random() * 5}s ease-in-out infinite ${Math.random() * 5}s;
+        `;
+        particleContainer.appendChild(particle);
+    }
+}();
