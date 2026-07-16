@@ -354,20 +354,22 @@ document.querySelectorAll('.btn').forEach(btn=>{
     }
     
     // SVG line border around hero (Shopify-style)
-    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-    svg.setAttribute('viewBox','0 0 600 600');
-    svg.setAttribute('class','hero-svg-border');
-    svg.innerHTML=`
-        <rect x="10" y="10" width="580" height="580" rx="20" ry="20"
-              fill="none" stroke="rgba(155,89,182,0.3)" stroke-width="1"
-              stroke-dasharray="2400" stroke-dashoffset="2400"
-              style="animation:svg-draw 3s ease forwards .8s"/>
-        <circle cx="300" cy="300" r="200" fill="none" stroke="rgba(0,230,178,0.15)" stroke-width=".5"
-                stroke-dasharray="1260" stroke-dashoffset="1260"
-                style="animation:svg-draw 2.5s ease forwards 1.2s"/>
-    `;
-    const widgetContainer=obj.querySelector('.hero3d-glow');
-    if(widgetContainer)widgetContainer.appendChild(svg);
+    const svgContainer=document.querySelector('.hero3d-glow');
+    if(svgContainer){
+        const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+        svg.setAttribute('viewBox','0 0 600 600');
+        svg.setAttribute('class','hero-svg-border');
+        svg.innerHTML=`
+            <rect x="10" y="10" width="580" height="580" rx="20" ry="20"
+                  fill="none" stroke="rgba(155,89,182,0.3)" stroke-width="1"
+                  stroke-dasharray="2400" stroke-dashoffset="2400"
+                  style="animation:svg-draw 3s ease forwards .8s"/>
+            <circle cx="300" cy="300" r="200" fill="none" stroke="rgba(0,230,178,0.15)" stroke-width=".5"
+                    stroke-dasharray="1260" stroke-dashoffset="1260"
+                    style="animation:svg-draw 2.5s ease forwards 1.2s"/>
+        `;
+        svgContainer.appendChild(svg);
+    }
 }();
 
 console.log('%c🐈‍⬛ Black Cat V3.2 Enhanced loaded!','color:#9b59b6;font-size:16px');
