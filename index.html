@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>گربه‌های سیاه | چرا دوست‌داشتنی‌ترند؟</title>
+    <meta name="description" content="چرا گربه‌های سیاه دوست‌داشتنی‌ترین موجودات روی زمین هستند؟">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐈‍⬛</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <canvas id="starfield"></canvas>
+    <canvas id="particles"></canvas>
+
+    <nav class="nav" id="nav">
+        <div class="nav-c">
+            <a href="#home" class="nav-logo">🐈‍⬛ <span>گربه سیاه</span></a>
+            <div class="nav-links">
+                <a href="#home" class="nav-link active">خانه</a>
+                <a href="#reasons" class="nav-link">دلایل</a>
+                <a href="#gallery" class="nav-link">گالری</a>
+                <a href="#facts" class="nav-link">حقایق</a>
+                <a href="#contact" class="nav-link">ارتباط</a>
+            </div>
+            <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="home">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <span class="hero-tag no-select">✦ سایت جادویی ✦</span>
+                <h1 class="hero-title no-select">
+                    <span>چرا گربه‌های</span>
+                    <span class="accent">سیاه</span>
+                    <span>دوست‌داشتنی‌ترند؟</span>
+                </h1>
+                <p class="hero-sub no-select">موجودات جادویی که قرن‌هاست دل‌های ما رو تسخیر کردند</p>
+                <div class="hero-btns">
+                    <a href="#reasons" class="btn btn-primary no-select">کشف کن ✦</a>
+                    <a href="#gallery" class="btn btn-outline no-select">گالری عکس</a>
+                </div>
+            </div>
+            <div class="hero-widget" id="heroWidget">
+                <div class="widget-glow"></div>
+                <img src="images/hero_3d_cat.png" alt="گربه سیاه جادویی" class="hero-img" id="heroImg">
+                <div class="widget-particles" id="widgetParticles"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- REASONS -->
+    <section class="section" id="reasons">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="no-select">چرا گربه‌های سیاه<br><span class="accent">دوست‌داشتنی‌ترند؟</span></h2>
+                <p class="no-select">۷ دلیل جادویی که ثابت میکنه گربه‌های سیاه بهترینن</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon living-icon">🌙</div>
+                    <h3 class="no-select">نماد شانس خوب</h3>
+                    <p>در فرهنگ‌های قدیمی، گربه‌های سیاه نماد شانس و خوشبختی بودند. ملوانان یک گربه سیاه رو با خودشون به سفر دریایی می‌بردن چون فکر می‌کردن بدشانسی رو دور میکنه!</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon living-icon">✨</div>
+                    <h3 class="no-select">زیبایی رازآلود</h3>
+                    <p>موی سیاه و براق گربه‌های سیاه مثل مخمل شبانه‌ست. وقتی نور خورشید بهشون میخوره، یه درخشش خاص پیدا میکنن که هیچ حیوان دیگه‌ای نداره.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon living-icon">🔮</div>
+                    <h3 class="no-select">رابطه با جادوگری</h3>
+                    <p>گربه‌های سیاه همیشه همراه جادوگرها بودن! اما این فقط یه افسانه نیست - واقعاً یه ارتباط عمیق و معنوی بین این موجودات وجود داره.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon living-icon">🖤</div>
+                    <h3 class="no-select">شخصیت خاص</h3>
+                    <p>صاحبان گربه‌های سیاه معمولاً میگن که اونا خیلی مهربون‌تر و باهوش‌تر از بقیه گربه‌ها هستن. انگار یه هوش ویژه‌ای دارن!</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon living-icon">👁️</div>
+                    <h3 class="no-select">فتوژنیک خالص</h3>
+                    <p>گربه‌های سیاه توی عکس‌ها فوق‌العاده میشینن! کنتراست موی سیاه با چشم‌های زرد یا سبزشون یه ترکیب بصری خیره‌کننده‌ست.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon living-icon">🕯️</div>
+                    <h3 class="no-select">همراه روحی</h3>
+                    <p>گربه‌های سیاه به انرژی اطرافشون حساس هستن. خیلی از صاحبا میگن که گربه سیاهشون قبل از اتفاقات مهم، رفتارش عوض میشه.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon living-icon">⭐</div>
+                    <h3 class="no-select">نادر و خاص</h3>
+                    <p>فقط حدود ۱۳٪ گربه‌های دنیا سیاه هستن! این یعنی داشتن یه گربه سیاه مثل داشتن یه جواهر نادر و منحصربه‌فرد است.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="section section-alt" id="gallery">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="no-select">گالری گربه‌های<br><span class="accent">سیاه جادویی</span></h2>
+                <p class="no-select">مجموعه‌ای از زیباترین گربه‌های سیاه</p>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item"><div class="gallery-frame"><img src="images/gallery_1.png" alt="گربه ۱"></div><span class="no-select">جادویی</span></div>
+                <div class="gallery-item"><div class="gallery-frame"><img src="images/gallery_2.png" alt="گربه ۲"></div><span class="no-select">مرموز</span></div>
+                <div class="gallery-item"><div class="gallery-frame"><img src="images/gallery_3.png" alt="گربه ۳"></div><span class="no-select">شبانه</span></div>
+                <div class="gallery-item"><div class="gallery-frame"><img src="images/gallery_4.png" alt="گربه ۴"></div><span class="no-select">مهتابی</span></div>
+                <div class="gallery-item"><div class="gallery-frame"><img src="images/gallery_5.png" alt="گربه ۵"></div><span class="no-select">ستاره‌ای</span></div>
+                <div class="gallery-item"><div class="gallery-frame"><img src="images/gallery_6.png" alt="گربه ۶"></div><span class="no-select">رویایی</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FACTS -->
+    <section class="section" id="facts">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="no-select">حقایق <span class="accent">جالب</span></h2>
+                <p class="no-select">چیزهایی که درباره گربه‌های سیاه نمیدونستی</p>
+            </div>
+            <div class="facts-grid">
+                <div class="fact-card">
+                    <div class="fact-icon living-icon">🐾</div>
+                    <h3 class="no-select">پراکندگی ریز</h3>
+                    <p>پرزهای گربه سیاه زیر نور فرابنفش درخشش آبی پیدا میکنن!</p>
+                </div>
+                <div class="fact-card">
+                    <div class="fact-icon living-icon">👁️</div>
+                    <h3 class="no-select">چشم‌های جادویی</h3>
+                    <p>رنگ چشمشون از زرد طلایی تا سبز زمردی متغیره.</p>
+                </div>
+                <div class="fact-card">
+                    <div class="fact-icon living-icon">🐾</div>
+                    <h3 class="no-select">پنجه‌های نرم</h3>
+                    <p>پنجه‌های گربه‌های سیاه معمولاً کمی نرم‌تره!</p>
+                </div>
+                <div class="fact-card">
+                    <div class="fact-icon living-icon">🌙</div>
+                    <h3 class="no-select">شب‌زی</h3>
+                    <p>توی شب تقریباً نامرئی هستن و فقط چشم‌هاشون میدرخشه!</p>
+                </div>
+            </div>
+            <div class="quote-block">
+                <blockquote class="no-select">"اگه یه گربه سیاه از جلوت رد شد، نترس! این یه نشونه خوش‌شانسیه. قدیما میگفتن هر گربه سیاهی یه جادوگر خوب توی خودش داره."</blockquote>
+                <cite class="no-select">— فرهنگ عامیانه</cite>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section section-dark" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="no-select">ارتباط <span class="accent">با ما</span></h2>
+                <p class="no-select">اگه شما هم گربه سیاه داری، برام بنویس!</p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="contact-icon living-icon">📱</div>
+                    <h3 class="no-select">کانال تلگرام</h3>
+                    <p>محتوای جادویی گربه‌ای</p>
+                    <a href="https://t.me/indercto" target="_blank" class="btn btn-accent no-select">@indercto</a>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon living-icon">👤</div>
+                    <h3 class="no-select">پیام شخصی</h3>
+                    <p>برای پیام مستقیم</p>
+                    <a href="https://t.me/little_killua" target="_blank" class="btn btn-accent no-select">@little_killua</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">🐈‍⬛ <span>گربه‌های سیاه</span></div>
+            <div class="footer-links">
+                <a href="https://t.me/indercto" target="_blank">کانال تلگرام</a>
+                <a href="https://t.me/little_killua" target="_blank">پیام شخصی</a>
+            </div>
+            <p class="footer-copy no-select">ساخته شده با 🖤 و کمی جادو | v4.0</p>
+        </div>
+    </footer>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#home" class="mobile-link">خانه</a>
+        <a href="#reasons" class="mobile-link">دلایل</a>
+        <a href="#gallery" class="mobile-link">گالری</a>
+        <a href="#facts" class="mobile-link">حقایق</a>
+        <a href="#contact" class="mobile-link">ارتباط</a>
+    </div>
+
+    <script src="js/starfield.js"></script>
+    <script src="js/oneko.js" data-cat="./images/oneko.png"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
