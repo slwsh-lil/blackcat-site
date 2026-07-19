@@ -72,8 +72,8 @@
 
     window.addEventListener('resize', () => {
       if(c && c.width) {
-        c.width = window.innerWidth;
-        c.height = window.innerHeight;
+        c.width = CONFIG.awidth;
+        c.height = CONFIG.aheight;
         CONFIG.awidth = Math.min(CONFIG.width, c.width - 100);
         CONFIG.aheight = Math.min(CONFIG.height, c.height - 100);
         CONFIG.cellWidth = CONFIG.awidth/(CONFIG.gridW-1)
@@ -110,8 +110,8 @@
       
       c = document.createElement('canvas');
       container.appendChild(c);
-      c.width = window.innerWidth;
-      c.height = window.innerHeight;
+      c.width = CONFIG.awidth;
+      c.height = CONFIG.aheight;
       const ctx = c.getContext('2d');
       
       const particles = [];
@@ -168,7 +168,7 @@
       }
       
       function drawCode() {
-        const offset = [c.width/2-width/2,c.height/2-height/2 - 30];
+        const offset = [0, 0];
         particles.forEach(p => {
           if (p.char && p.char !== " ") {
             const constraint = p.downConstraint;
