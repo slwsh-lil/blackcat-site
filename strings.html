@@ -72,8 +72,8 @@
 
     window.addEventListener('resize', () => {
       if(c && c.width) {
-        c.width = CONFIG.awidth;
-        c.height = CONFIG.aheight;
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
         CONFIG.awidth = Math.min(CONFIG.width, c.width - 100);
         CONFIG.aheight = Math.min(CONFIG.height, c.height - 100);
         CONFIG.cellWidth = CONFIG.awidth/(CONFIG.gridW-1)
@@ -105,13 +105,13 @@
       container.innerHTML = '';
       const roofImg = document.createElement('img');
       roofImg.src = 'images/roof.png';
-      roofImg.style.cssText = 'display:block;width:400px;height:auto;image-rendering:pixelated;margin-bottom:-1px;filter:drop-shadow(0 8px 12px rgba(0,0,0,0.7));';
+      roofImg.style.cssText = 'display:block;width:400px;height:auto;image-rendering:pixelated;margin-bottom:-30px;filter:drop-shadow(0 8px 12px rgba(0,0,0,0.7));position:relative;z-index:2;';
       container.appendChild(roofImg);
       
       c = document.createElement('canvas');
       container.appendChild(c);
-      c.width = CONFIG.awidth;
-      c.height = CONFIG.aheight;
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
       const ctx = c.getContext('2d');
       
       const particles = [];
@@ -168,7 +168,7 @@
       }
       
       function drawCode() {
-        const offset = [0, 0];
+        const offset = [c.width/2-width/2,c.height/2-height/2 - 30];
         particles.forEach(p => {
           if (p.char && p.char !== " ") {
             const constraint = p.downConstraint;
