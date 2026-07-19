@@ -1,121 +1,409 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>گربه‌های سیاه | Interactive Strings</title>
+    <title>糸 | Strings - Interactive Cloth</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&display=swap');
-        @font-face{font-family:'QPixia';src:url('../fonts/q_pixia.ttf') format('truetype');font-display:swap}
-        
         *{margin:0;padding:0;box-sizing:border-box}
         body{
             background:#08090d;
             min-height:100vh;
             display:flex;
-            flex-direction:column;
             align-items:center;
             justify-content:center;
             overflow:hidden;
-            font-family:'Noto Naskh Arabic',monospace;
+            font-family:'Noto Sans JP',sans-serif;
+            color:#ddd8d0;
         }
-        #container{
+        .wrapper{
+            display:flex;
+            gap:0;
+            width:100%;
+            height:100vh;
+        }
+        
+        /* Settings Panel */
+        .panel{
+            width:320px;
+            background:#12131a;
+            border-left:1px solid rgba(255,255,255,.06);
+            overflow-y:auto;
+            padding:20px;
+            flex-shrink:0;
+        }
+        .panel::-webkit-scrollbar{width:4px}
+        .panel::-webkit-scrollbar-thumb{background:rgba(155,89,182,.3);border-radius:2px}
+        
+        .panel-title{
+            font-size:1.1rem;
+            font-weight:600;
+            margin-bottom:20px;
+            display:flex;
+            align-items:center;
+            gap:8px;
+            color:#e0e0e0;
+        }
+        .panel-title span{color:rgba(155,89,182,.5);font-size:.8rem}
+        
+        .section{
+            margin-bottom:16px;
+            background:rgba(255,255,255,.03);
+            border:1px solid rgba(255,255,255,.06);
+            border-radius:8px;
+            padding:14px;
+        }
+        .section-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:12px;
+            font-size:.75rem;
+            font-weight:600;
+            color:#9b59b6;
+            letter-spacing:.05em;
+            text-transform:uppercase;
+        }
+        
+        .row{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            margin-bottom:10px;
+            font-size:.8rem;
+        }
+        .row:last-child{margin-bottom:0}
+        .row-label{color:#8a8a85;min-width:80px}
+        
+        .slider-wrap{
+            flex:1;
+            margin:0 12px;
             position:relative;
+        }
+        input[type="range"]{
+            -webkit-appearance:none;
+            width:100%;
+            height:4px;
+            background:rgba(255,255,255,.1);
+            border-radius:2px;
+            outline:none;
+            cursor:pointer;
+        }
+        input[type="range"]::-webkit-slider-thumb{
+            -webkit-appearance:none;
+            width:14px;
+            height:14px;
+            background:#9b59b6;
+            border-radius:50%;
+            cursor:pointer;
+            transition:all .2s;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover{
+            transform:scale(1.2);
+            box-shadow:0 0 10px rgba(155,89,182,.5);
+        }
+        
+        .value-box{
+            width:52px;
+            background:rgba(255,255,255,.05);
+            border:1px solid rgba(255,255,255,.1);
+            border-radius:4px;
+            padding:4px 6px;
+            text-align:center;
+            font-size:.75rem;
+            color:#e0e0e0;
+            font-family:'SF Mono',monospace;
+        }
+        
+        select{
+            background:rgba(255,255,255,.05);
+            border:1px solid rgba(255,255,255,.1);
+            border-radius:4px;
+            padding:6px 10px;
+            color:#e0e0e0;
+            font-size:.8rem;
+            width:100%;
+            cursor:pointer;
+            outline:none;
+        }
+        select option{background:#12131a}
+        
+        .checkbox-row{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            margin-bottom:8px;
+            font-size:.8rem;
+        }
+        .checkbox-row label{
+            color:#8a8a85;
+            cursor:pointer;
+            display:flex;
+            align-items:center;
+            gap:8px;
+        }
+        input[type="checkbox"]{
+            -webkit-appearance:none;
+            width:16px;
+            height:16px;
+            border:1px solid rgba(255,255,255,.2);
+            border-radius:3px;
+            background:rgba(255,255,255,.05);
+            cursor:pointer;
+            position:relative;
+        }
+        input[type="checkbox"]:checked{
+            background:#9b59b6;
+            border-color:#9b59b6;
+        }
+        input[type="checkbox"]:checked::after{
+            content:'✓';
+            position:absolute;
+            top:-1px;left:2px;
+            font-size:12px;
+            color:#fff;
+        }
+        
+        .btn{
+            width:100%;
+            padding:10px;
+            background:rgba(155,89,182,.2);
+            border:1px solid rgba(155,89,182,.3);
+            border-radius:6px;
+            color:#b07cc6;
+            font-size:.85rem;
+            cursor:pointer;
+            transition:all .3s;
+            margin-top:8px;
+        }
+        .btn:hover{background:rgba(155,89,182,.3);border-color:rgba(155,89,182,.5)}
+        
+        /* Canvas Area */
+        .canvas-area{
+            flex:1;
             display:flex;
             align-items:center;
             justify-content:center;
+            position:relative;
+        }
+        #container{
+            position:relative;
             touch-action:none;
         }
-        canvas{
-            max-height:100vh;
-            max-width:100vw;
-        }
-        .title{
-            position:fixed;
-            top:20px;
-            left:50%;
-            transform:translateX(-50%);
-            font-family:'QPixia','Noto Naskh Arabic',monospace;
-            font-size:clamp(1rem,3vw,1.5rem);
-            color:rgba(155,89,182,.6);
-            text-align:center;
-            pointer-events:none;
-            z-index:10;
-        }
+        canvas{display:block}
+        
         .hint{
-            position:fixed;
+            position:absolute;
             bottom:20px;
             left:50%;
             transform:translateX(-50%);
-            font-family:'Noto Naskh Arabic',monospace;
-            font-size:.8rem;
+            font-size:.75rem;
             color:rgba(108,112,134,.5);
             pointer-events:none;
         }
-        .back-btn{
-            position:fixed;
-            top:20px;
-            left:20px;
-            background:rgba(155,89,182,.15);
-            border:1px solid rgba(155,89,182,.2);
-            color:#b07cc6;
-            padding:8px 16px;
-            border-radius:6px;
-            cursor:pointer;
-            font-family:'Noto Naskh Arabic',monospace;
-            font-size:.8rem;
-            z-index:10;
-            text-decoration:none;
-            transition:all .3s;
+        
+        @media(max-width:768px){
+            .wrapper{flex-direction:column}
+            .panel{width:100%;height:auto;max-height:40vh;border-left:none;border-bottom:1px solid rgba(255,255,255,.06)}
+            .canvas-area{height:60vh}
         }
-        .back-btn:hover{background:rgba(155,89,182,.25);border-color:rgba(155,89,182,.4)}
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <a href="../index.html" class="back-btn">← بازگشت</a>
-    <div class="title">🐈‍⬛ گربه‌های سیاه — طناب تعاملی</div>
-    <div id="container"></div>
-    <div class="hint">ماوس رو حرکت بده یا کلیک کن!</div>
+    <div class="wrapper">
+        <!-- Settings Panel -->
+        <div class="panel">
+            <div class="panel-title">糸 <span>{ }</span></div>
+            
+            <!-- Destination -->
+            <div class="section">
+                <div class="section-header">DESTINATION <span>{ }</span></div>
+                <div class="row">
+                    <span class="row-label">_country</span>
+                    <select id="countrySelect">
+                        <option value="japan">🇯🇵 Japan - 日本</option>
+                        <option value="china">🇨🇳 China - 中国</option>
+                        <option value="korea">🇰🇷 Korea - 한국</option>
+                        <option value="cat">🐈‍⬛ 猫 - Neko</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Cloth -->
+            <div class="section">
+                <div class="section-header">CLOTH <span>{ }</span></div>
+                <div class="row">
+                    <span class="row-label">_width</span>
+                    <div class="slider-wrap"><input type="range" id="clothWidth" min="200" max="800" value="476"></div>
+                    <div class="value-box" id="clothWidthVal">476</div>
+                </div>
+                <div class="row">
+                    <span class="row-label">_height</span>
+                    <div class="slider-wrap"><input type="range" id="clothHeight" min="200" max="600" value="332"></div>
+                    <div class="value-box" id="clothHeightVal">332</div>
+                </div>
+                <div class="row">
+                    <span class="row-label">_columns</span>
+                    <div class="slider-wrap"><input type="range" id="clothCols" min="10" max="80" value="36"></div>
+                    <div class="value-box" id="clothColsVal">36</div>
+                </div>
+                <div class="row">
+                    <span class="row-label">_rows</span>
+                    <div class="slider-wrap"><input type="range" id="clothRows" min="10" max="60" value="40"></div>
+                    <div class="value-box" id="clothRowsVal">40</div>
+                </div>
+                <button class="btn" id="rebuildBtn">再構築 / Rebuild cloth</button>
+            </div>
+            
+            <!-- Motion & Sound -->
+            <div class="section">
+                <div class="section-header">MOTION <span>{ }</span></div>
+                <div class="row">
+                    <span class="row-label">_gravity</span>
+                    <div class="slider-wrap"><input type="range" id="gravity" min="0" max="1" step="0.01" value="0.20"></div>
+                    <div class="value-box" id="gravityVal">0.20</div>
+                </div>
+                <div class="row">
+                    <span class="row-label">_damping</span>
+                    <div class="slider-wrap"><input type="range" id="damping" min="0.9" max="1" step="0.001" value="0.990"></div>
+                    <div class="value-box" id="dampingVal">0.990</div>
+                </div>
+                <div class="row">
+                    <span class="row-label">_precision</span>
+                    <div class="slider-wrap"><input type="range" id="precision" min="1" max="15" value="5"></div>
+                    <div class="value-box" id="precisionVal">5</div>
+                </div>
+                <div class="row">
+                    <span class="row-label">_stretch</span>
+                    <div class="slider-wrap"><input type="range" id="stretch" min="1" max="3" step="0.01" value="1.10"></div>
+                    <div class="value-box" id="stretchVal">1.10</div>
+                </div>
+                <div class="row">
+                    <span class="row-label">_compress</span>
+                    <div class="slider-wrap"><input type="range" id="compress" min="0" max="0.5" step="0.01" value="0.02"></div>
+                    <div class="value-box" id="compressVal">0.02</div>
+                </div>
+                <div class="row">
+                    <span class="row-label">_touch_r</span>
+                    <div class="slider-wrap"><input type="range" id="touchRadius" min="500" max="15000" value="5000"></div>
+                    <div class="value-box" id="touchRadiusVal">5000</div>
+                </div>
+                <div class="row">
+                    <span class="row-label">_touch_f</span>
+                    <div class="slider-wrap"><input type="range" id="touchForce" min="0.5" max="10" step="0.1" value="4"></div>
+                    <div class="value-box" id="touchForceVal">4</div>
+                </div>
+                
+                <div class="checkbox-row">
+                    <label><input type="checkbox" id="keepBounds"> _keep_in_bounds</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Canvas Area -->
+        <div class="canvas-area">
+            <div id="container"></div>
+            <div class="hint">マウスを動かしてください / ドラッグして遊ぶ</div>
+        </div>
+    </div>
     
     <script>
     /* ============================================
        BLACK CAT INTERACTIVE STRINGS
-       Cloth physics simulation with Persian text
+       Cloth physics + Settings Panel
        ============================================ */
     
-    const TEXT = "گربه‌های سیاه دوست‌داشتنی‌ترین موجودات روی زمین هستند ✦ جادو ✦ رازآلود ✦ زیبا ✦ ";
+    const TEXTS = {
+        japan: '日本語のテキスト ✦ 猫 ✦ 黒猫 ✦ 魔法 ✦ 神秘 ✦ ',
+        china: '中文文本 ✦ 猫 ✦ 黑猫 ✦ 魔法 ✦ 神秘 ✦ ',
+        korea: '한국어 텍스트 ✦ 고양이 ✦ 검은 고양이 ✦ 마법 ✦ 신비 ✦ ',
+        cat: 'گربه‌های سیاه ✦ دوست‌داشتنی ✦ جادویی ✦ رازآلود ✦ زیبا ✦ '
+    };
     const EMOJIS = ['🐈‍⬛','🖤','🌙','✨','🔮','👁️','🐾','⭐'];
     
     // Config
-    const w = Math.min(500, window.innerWidth - 60);
-    const h = Math.min(400, window.innerHeight - 100);
-    const CONFIG = {
-        awidth: w,
-        aheight: h,
-        gridW: Math.min(40, Math.floor(w / 12)),
-        gridH: Math.min(30, Math.floor(h / 14)),
-        gravity: 0.18,
-        damping: 0.99,
+    let CONFIG = {
+        awidth: 476,
+        aheight: 332,
+        gridW: 36,
+        gridH: 40,
+        gravity: 0.20,
+        damping: 0.990,
         iterationsPerFrame: 5,
         compressFactor: 0.02,
-        stretchFactor: 1.1,
-        mouseSize: 4000,
-        mouseStrength: 3,
+        stretchFactor: 1.10,
+        mouseSize: 5000,
+        mouseStrength: 4,
         pointRadius: 1.5,
-        contain: false
+        contain: false,
+        country: 'japan'
     };
-    CONFIG.cellWidth = CONFIG.awidth / (CONFIG.gridW - 1);
-    CONFIG.cellHeight = CONFIG.aheight / (CONFIG.gridH - 1);
     
-    // Vector2 class
+    // Rebuild function
+    function rebuildCloth() {
+        CONFIG.awidth = parseInt(document.getElementById('clothWidth').value);
+        CONFIG.aheight = parseInt(document.getElementById('clothHeight').value);
+        CONFIG.gridW = parseInt(document.getElementById('clothCols').value);
+        CONFIG.gridH = parseInt(document.getElementById('clothRows').value);
+        CONFIG.cellWidth = CONFIG.awidth / (CONFIG.gridW - 1);
+        CONFIG.cellHeight = CONFIG.aheight / (CONFIG.gridH - 1);
+        main();
+    }
+    
+    // Slider bindings
+    const sliders = [
+        {id:'gravity', val:'gravityVal', key:'gravity', format:v=>v},
+        {id:'damping', val:'dampingVal', key:'damping', format:v=>v},
+        {id:'precision', val:'precisionVal', key:'iterationsPerFrame', format:v=>v},
+        {id:'stretch', val:'stretchVal', key:'stretchFactor', format:v=>v},
+        {id:'compress', val:'compressVal', key:'compressFactor', format:v=>v},
+        {id:'touchRadius', val:'touchRadiusVal', key:'mouseSize', format:v=>v},
+        {id:'touchForce', val:'touchForceVal', key:'mouseStrength', format:v=>v},
+    ];
+    
+    sliders.forEach(s => {
+        const el = document.getElementById(s.id);
+        const valEl = document.getElementById(s.val);
+        if(el && valEl) {
+            el.addEventListener('input', () => {
+                const v = parseFloat(el.value);
+                CONFIG[s.key] = v;
+                valEl.textContent = s.format(v);
+            });
+        }
+    });
+    
+    // Cloth dimension sliders
+    ['clothWidth','clothHeight','clothCols','clothRows'].forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.addEventListener('input', () => {
+            document.getElementById(id+'Val').textContent = el.value;
+        });
+    });
+    
+    // Country select
+    document.getElementById('countrySelect').addEventListener('change', (e) => {
+        CONFIG.country = e.target.value;
+        main();
+    });
+    
+    // Keep bounds
+    document.getElementById('keepBounds').addEventListener('change', (e) => {
+        CONFIG.contain = e.target.checked;
+    });
+    
+    // Rebuild button
+    document.getElementById('rebuildBtn').addEventListener('click', rebuildCloth);
+    
+    // Vec2 class
     class Vec2 {
         constructor(x=0, y=0) { this.reset(x, y); }
         reset(x=0, y=0) { this.x = x; this.y = y; }
         clone() { return new Vec2(this.x, this.y); }
         add(v) { this.x += v.x; this.y += v.y; return this; }
-        addNew(v) { return this.clone().add(v); }
-        subtract(v) { this.x -= v.x; this.y -= v.y; return this; }
         subtractNew(v) { return this.clone().subtract(v); }
+        subtract(v) { this.x -= v.x; this.y -= v.y; return this; }
         scale(s) { this.x *= s; this.y *= s; return this; }
         get lengthSquared() { return this.x**2 + this.y**2; }
         get length() { return Math.hypot(this.x, this.y); }
@@ -128,7 +416,6 @@
         }
     }
     
-    // Particle class
     class Particle {
         constructor({x, y, pinned, id, char}) {
             this.pos = new Vec2(x, y);
@@ -155,10 +442,17 @@
             this.pos.y += this.velocity.y + this.acceleration.y * dd;
             this.acceleration.reset();
         }
+        contain() {
+            if(this.pinned) return;
+            const r = 5;
+            if (this.pos.x < r) { this.pos.x = r; this.oldPos.x = this.pos.x + Math.abs(this.oldPos.x - this.pos.x) * 0.8; }
+            else if (this.pos.x > CONFIG.awidth - r) { this.pos.x = CONFIG.awidth - r; this.oldPos.x = this.pos.x - Math.abs(this.oldPos.x - this.pos.x) * 0.8; }
+            if (this.pos.y < r) { this.pos.y = r; this.oldPos.y = this.pos.y + Math.abs(this.oldPos.y - this.pos.y) * 0.8; }
+            else if (this.pos.y > CONFIG.aheight - r) { this.pos.y = CONFIG.aheight - r; this.oldPos.y = this.pos.y - Math.abs(this.oldPos.y - this.pos.y) * 0.8; }
+        }
         applyForce(v) { this.acceleration.add(v); }
     }
     
-    // Constraint class
     class Constraint {
         constructor({p1, p2, length, compressFactor, stretchFactor, isSpacer}) {
             this.p1 = p1; this.p2 = p2;
@@ -172,45 +466,41 @@
             const dy = this.p2.pos.y - this.p1.pos.y;
             const distance = Math.hypot(dx, dy);
             if (distance === 0) return;
-            let targetLength = this.length;
-            if (distance < this.minLength) targetLength = this.minLength;
-            else if (distance > this.maxLength) targetLength = this.maxLength;
+            let target = this.length;
+            if (distance < this.minLength) target = this.minLength;
+            else if (distance > this.maxLength) target = this.maxLength;
             else return;
-            const difference = targetLength - distance;
-            const percent = difference / distance / 2;
-            const offsetX = dx * percent;
-            const offsetY = dy * percent;
-            if (!this.p1.pinned) { this.p1.pos.x -= offsetX; this.p1.pos.y -= offsetY; }
-            if (!this.p2.pinned) { this.p2.pos.x += offsetX; this.p2.pos.y += offsetY; }
+            const diff = target - distance;
+            const pct = diff / distance / 2;
+            const ox = dx * pct, oy = dy * pct;
+            if (!this.p1.pinned) { this.p1.pos.x -= ox; this.p1.pos.y -= oy; }
+            if (!this.p2.pinned) { this.p2.pos.x += ox; this.p2.pos.y += oy; }
         }
     }
     
-    // Build full text
-    let fullText = '';
-    for (let i = 0; i < 50; i++) fullText += TEXT;
-    for (let i = 0; i < 30; i++) fullText += EMOJIS[i % EMOJIS.length] + ' ';
+    let canvas, ctx, particles, constraints, charCanvases;
     
-    // Main
     function main() {
+        const text = (TEXTS[CONFIG.country] || TEXTS.japan) + EMOJIS.join(' ');
         const container = document.getElementById('container');
-        const c = document.createElement('canvas');
         container.innerHTML = '';
-        container.appendChild(c);
-        c.width = window.innerWidth;
-        c.height = window.innerHeight;
-        const ctx = c.getContext('2d');
         
-        const fontSize = Math.max(10, CONFIG.cellHeight * 1.1);
+        canvas = document.createElement('canvas');
+        container.appendChild(canvas);
+        canvas.width = window.innerWidth - 320;
+        canvas.height = window.innerHeight;
+        ctx = canvas.getContext('2d');
         
-        // Pre-render characters
-        const charCanvases = {};
-        const chars = new Set(fullText);
-        for (const ch of chars) {
+        const fontSize = Math.max(8, CONFIG.cellHeight * 1.1);
+        
+        // Pre-render chars
+        charCanvases = {};
+        for (const ch of new Set(text)) {
             if (ch === ' ') continue;
             const off = document.createElement('canvas');
             off.width = off.height = Math.ceil(fontSize * 1.4);
             const octx = off.getContext('2d');
-            octx.font = `${fontSize}px 'QPixia','Noto Naskh Arabic',monospace`;
+            octx.font = `${fontSize}px 'Noto Sans JP',sans-serif`;
             octx.textAlign = 'center';
             octx.textBaseline = 'middle';
             octx.fillStyle = '#b07cc6';
@@ -218,92 +508,70 @@
             charCanvases[ch] = off;
         }
         
-        const particles = [];
-        const constraints = [];
+        particles = [];
+        constraints = [];
         
-        // Create grid
+        CONFIG.cellWidth = CONFIG.awidth / (CONFIG.gridW - 1);
+        CONFIG.cellHeight = CONFIG.aheight / (CONFIG.gridH - 1);
+        
         for (let i = 0; i < CONFIG.gridW; i++) {
             for (let j = 0; j < CONFIG.gridH; j++) {
                 const x = i * CONFIG.cellWidth;
                 const y = j * CONFIG.cellHeight;
                 const id = j * CONFIG.gridW + i;
                 const pinned = j === 0;
-                const charIndex = (i + j * CONFIG.gridW) % fullText.length;
-                const char = fullText[charIndex] || ' ';
-                const particle = new Particle({x, y, pinned, id, char});
-                particles.push(particle);
+                const charIndex = (i + j * CONFIG.gridW) % text.length;
+                const char = text[charIndex] || ' ';
+                particles.push(new Particle({x, y, pinned, id, char}));
             }
         }
         
-        // Create constraints
         for (let i = 0; i < CONFIG.gridW; i++) {
             for (let j = 0; j < CONFIG.gridH; j++) {
                 const id = j * CONFIG.gridW + i;
                 const p = particles[id];
-                
                 if (j < CONFIG.gridH - 1) {
-                    const bottomP = particles[(j + 1) * CONFIG.gridW + i];
-                    const c = new Constraint({
-                        p1: p, p2: bottomP,
-                        length: CONFIG.cellHeight,
-                        compressFactor: CONFIG.compressFactor,
-                        stretchFactor: CONFIG.stretchFactor
-                    });
+                    const bottom = particles[(j + 1) * CONFIG.gridW + i];
+                    const c = new Constraint({p1: p, p2: bottom, length: CONFIG.cellHeight, compressFactor: CONFIG.compressFactor, stretchFactor: CONFIG.stretchFactor});
                     constraints.push(c);
                     p.downConstraint = c;
                 }
-                
                 if (i < CONFIG.gridW - 1) {
-                    const rightP = particles[j * CONFIG.gridW + i + 1];
-                    const hc = new Constraint({
-                        p1: p, p2: rightP,
-                        length: CONFIG.cellWidth,
-                        compressFactor: 0.6,
-                        stretchFactor: 4,
-                        isSpacer: true
-                    });
-                    constraints.push(hc);
+                    const right = particles[j * CONFIG.gridW + i + 1];
+                    constraints.push(new Constraint({p1: p, p2: right, length: CONFIG.cellWidth, compressFactor: 0.6, stretchFactor: 4, isSpacer: true}));
                 }
             }
         }
         
-        // Input handling
+        // Input
         let mousePos = new Vec2();
-        let grabbedParticle = null;
+        let grabbed = null;
         const grabRadius = 20;
         
-        function getMousePos(e) {
-            const rect = c.getBoundingClientRect();
-            return new Vec2(
-                e.clientX - c.width / 2 + CONFIG.awidth / 2,
-                e.clientY - c.height / 2 + CONFIG.aheight / 2
-            );
+        function getMouse(e) {
+            const rect = canvas.getBoundingClientRect();
+            return new Vec2(e.clientX - rect.left, e.clientY - rect.top);
         }
         
-        c.addEventListener('pointerdown', (e) => {
-            mousePos = getMousePos(e);
+        canvas.onpointerdown = (e) => {
+            mousePos = getMouse(e);
             for (const p of particles) {
                 if (mousePos.subtractNew(p.pos).length < grabRadius) {
-                    grabbedParticle = p;
-                    grabbedParticle.originalPinned = grabbedParticle.pinned;
-                    grabbedParticle.pinned = true;
+                    grabbed = p;
+                    grabbed._origPin = grabbed.pinned;
+                    grabbed.pinned = true;
                     break;
                 }
             }
-        });
-        
-        c.addEventListener('pointerup', () => {
-            if (grabbedParticle) {
-                grabbedParticle.pinned = grabbedParticle.originalPinned;
-                grabbedParticle = null;
-            }
-        });
-        
-        c.addEventListener('pointermove', (e) => {
-            mousePos = getMousePos(e);
-            if (grabbedParticle) {
-                grabbedParticle.pos.reset(mousePos.x, mousePos.y);
-                grabbedParticle.oldPos.reset(mousePos.x, mousePos.y);
+        };
+        canvas.onpointerup = () => {
+            if (grabbed) { grabbed.pinned = grabbed._origPin; grabbed = null; }
+        };
+        canvas.onpointermove = (e) => {
+            mousePos = getMouse(e);
+            if (grabbed) {
+                grabbed.pos.reset(mousePos.x, mousePos.y);
+                grabbed.oldPos.reset(mousePos.x, mousePos.y);
             }
             for (const p of particles) {
                 const diff = mousePos.subtractNew(p.pos);
@@ -314,15 +582,14 @@
                     p.applyForce(new Vec2(Math.cos(a) * strength, Math.sin(a) * strength));
                 }
             }
-        });
+        };
+        canvas.oncontextmenu = (e) => e.preventDefault();
         
-        c.addEventListener('contextmenu', (e) => e.preventDefault());
-        
-        // Animation loop
+        // Render loop
         let lastDelta = 0;
-        function runloop(delta) {
-            requestAnimationFrame(runloop);
-            ctx.clearRect(0, 0, c.width, c.height);
+        function loop(delta) {
+            requestAnimationFrame(loop);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             
             particles.forEach(p => p.update(delta - lastDelta));
             lastDelta = delta;
@@ -330,34 +597,34 @@
             for (let i = 0; i < CONFIG.iterationsPerFrame; i++) {
                 constraints.forEach(c => c.solve());
             }
+            if (CONFIG.contain) particles.forEach(p => p.contain());
             
-            // Draw characters
-            const offset = [c.width / 2 - CONFIG.awidth / 2, c.height / 2 - CONFIG.aheight / 2 - 20];
+            const ox = canvas.width / 2 - CONFIG.awidth / 2;
+            const oy = canvas.height / 2 - CONFIG.aheight / 2;
+            
             particles.forEach(p => {
-                if (p.char && p.char !== ' ') {
-                    const constraint = p.downConstraint;
-                    let cos = 1, sin = 0;
-                    if (constraint) {
-                        const dx = constraint.p2.pos.x - constraint.p1.pos.x;
-                        const dy = constraint.p2.pos.y - constraint.p1.pos.y;
-                        const angle = Math.atan2(dy, dx) - Math.PI / 2;
-                        cos = Math.cos(angle);
-                        sin = Math.sin(angle);
-                    }
-                    const img = charCanvases[p.char];
-                    if (!img) return;
-                    const half = img.width / 2;
-                    ctx.setTransform(cos, sin, -sin, cos, p.pos.x + offset[0], p.pos.y + offset[1]);
-                    ctx.drawImage(img, -half, -half);
+                if (!p.char || p.char === ' ') return;
+                const con = p.downConstraint;
+                let cos = 1, sin = 0;
+                if (con) {
+                    const dx = con.p2.pos.x - con.p1.pos.x;
+                    const dy = con.p2.pos.y - con.p1.pos.y;
+                    const angle = Math.atan2(dy, dx) - Math.PI / 2;
+                    cos = Math.cos(angle);
+                    sin = Math.sin(angle);
                 }
+                const img = charCanvases[p.char];
+                if (!img) return;
+                const half = img.width / 2;
+                ctx.setTransform(cos, sin, -sin, cos, p.pos.x + ox, p.pos.y + oy);
+                ctx.drawImage(img, -half, -half);
             });
-            
             ctx.setTransform(1, 0, 0, 1, 0, 0);
         }
-        requestAnimationFrame(runloop);
+        requestAnimationFrame(loop);
     }
     
-    setTimeout(main, 300);
+    setTimeout(main, 200);
     </script>
 </body>
 </html>
