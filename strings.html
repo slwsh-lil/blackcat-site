@@ -6,470 +6,196 @@
     <title>糸 | Strings</title>
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap");
-        body {
-            background: #08090d;
-            margin: 0;
-            display: flex;
-            min-height: 100vh;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        canvas {
-            max-height: 100vh;
-            max-width: 100vw;
-            height: auto;
-            width: auto;
-        }
-        #container {
-            box-shadow: 0 0 40px rgba(155, 89, 182, 0.15);
-            border: 1px solid rgba(155, 89, 182, 0.2);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            touch-action: none;
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:#08090d;width:100vw;height:100vh;overflow:hidden;font-family:'Noto Sans JP',sans-serif;color:#e0e0e0}
+        .wrap{display:flex;height:100vh}
+        #container{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:10px;touch-action:none;position:relative}
+        canvas{display:block}
+        .panel{width:260px;background:#12131a;border-left:1px solid rgba(255,255,255,.06);padding:14px;overflow-y:auto;font-size:.75rem}
+        .panel::-webkit-scrollbar{width:3px}
+        .panel::-webkit-scrollbar-thumb{background:rgba(155,89,182,.3);border-radius:2px}
+        .panel h3{font-size:.8rem;color:#9b59b6;margin-bottom:10px;letter-spacing:.05em}
+        .row{display:flex;align-items:center;margin-bottom:8px}
+        .row label{width:70px;color:#8a8a85;font-size:.7rem}
+        .row input[type=range]{flex:1;margin:0 8px;height:3px;-webkit-appearance:none;background:rgba(255,255,255,.1);border-radius:2px;outline:none}
+        .row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;background:#9b59b6;border-radius:50%;cursor:pointer}
+        .row input[type=number]{width:48px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:3px;padding:3px;text-align:center;font-size:.7rem;color:#e0e0e0;font-family:monospace}
+        .btn{width:100%;padding:7px;background:rgba(155,89,182,.2);border:1px solid rgba(155,89,182,.3);border-radius:4px;color:#b07cc6;font-size:.75rem;cursor:pointer;margin-top:6px}
+        .btn:hover{background:rgba(155,89,182,.3)}
+        .sep{border:none;border-top:1px solid rgba(255,255,255,.05);margin:10px 0}
     </style>
 </head>
 <body>
-    <div id="container"></div>
+    <div class="wrap">
+        <div id="container"></div>
+        <div class="panel">
+            <h3>⚙️ Settings</h3>
+            
+            <div class="row"><label>Cloth W</label><input type="range" id="sW" min="100" max="800" value="400"><input type="number" id="vW" value="400"></div>
+            <div class="row"><label>Cloth H</label><input type="range" id="sH" min="100" max="600" value="400"><input type="number" id="vH" value="400"></div>
+            <div class="row"><label>Cols</label><input type="range" id="sCols" min="10" max="80" value="50"><input type="number" id="vCols" value="50"></div>
+            <div class="row"><label>Rows</label><input type="range" id="sRows" min="10" max="80" value="50"><input type="number" id="vRows" value="50"></div>
+            <hr class="sep">
+            <div class="row"><label>Gravity</label><input type="range" id="sGrav" min="0" max="1" step="0.01" value="0.2"><input type="number" id="vGrav" value="0.2"></div>
+            <div class="row"><label>Damping</label><input type="range" id="sDamp" min="0.9" max="1" step="0.001" value="0.99"><input type="number" id="vDamp" value="0.99"></div>
+            <div class="row"><label>Precision</label><input type="range" id="sIter" min="1" max="15" value="5"><input type="number" id="vIter" value="5"></div>
+            <div class="row"><label>Stretch</label><input type="range" id="sStretch" min="1" max="3" step="0.01" value="1.1"><input type="number" id="vStretch" value="1.1"></div>
+            <div class="row"><label>Compress</label><input type="range" id="sComp" min="0" max="0.5" step="0.01" value="0.02"><input type="number" id="vComp" value="0.02"></div>
+            <hr class="sep">
+            <div class="row"><label>Touch R</label><input type="range" id="sMR" min="500" max="15000" value="5000"><input type="number" id="vMR" value="5000"></div>
+            <div class="row"><label>Touch F</label><input type="range" id="sMF" min="0.5" max="10" step="0.1" value="4"><input type="number" id="vMF" value="4"></div>
+            <hr class="sep">
+            <div class="row"><label>Roof W</label><input type="range" id="sRW" min="100" max="800" value="400"><input type="number" id="vRW" value="400"></div>
+            <div class="row"><label>Roof Gap</label><input type="range" id="sRG" min="-100" max="50" value="-30"><input type="number" id="vRG" value="-30"></div>
+            <div class="row"><label>Shadow</label><input type="range" id="sSh" min="0" max="30" value="8"><input type="number" id="vSh" value="8"></div>
+            <hr class="sep">
+            <button class="btn" id="rebuild">🔄 Rebuild</button>
+        </div>
+    </div>
+
     <script>
-    // Utility functions (replacing CDN import)
-    function getPointID(row, col, gridH) {
-        return row + col * gridH;
-    }
-    function smoothstep(edge0, edge1, x) {
-        const t = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)));
-        return t * t * (3 - 2 * t);
-    }
-    function lerp(a, b, t) {
-        return a + (b - a) * t;
-    }
+    // === UTILS ===
+    function getPointID(row,col,gridH){return row+col*gridH}
+    function smoothstep(e0,e1,x){const t=Math.max(0,Math.min(1,(x-e0)/(e1-e0)));return t*t*(3-2*t)}
 
-    let fullCode = '';
+    // === SETTINGS ===
+    const S={aw:400,ah:400,cols:50,rows:50,grav:.2,damp:.99,iter:5,stretch:1.1,comp:.02,mouseR:5000,mouseF:4,roofW:400,roofGap:-30,shadow:8};
 
-    const w = Math.min(400, window.innerWidth - 100), h = Math.min(400, window.innerHeight - 100);
-    const CONFIG = {
-      awidth: w,
-      aheight: h,
-      gridW: Math.min(50, Math.floor(w/10)),
-      gridH: Math.min(50, Math.floor(w/5)),
-      gravity: .2,
-      damping: .99,
-      iterationsPerFrame: 5,
-      compressFactor: .02,
-      stretchFactor: 1.1,
-      mouseSize: 5000,
-      mouseStrength: 4,
-      contain: false,
-      randomSolve: false,
-      preset: ''
-    };
-    CONFIG.cellWidth = CONFIG.awidth/(CONFIG.gridW-1)
-    CONFIG.cellHeight = CONFIG.aheight/(CONFIG.gridH-1);
+    // Bind sliders
+    const pairs=[
+        ['sW','vW','aw'],['sH','vH','ah'],['sCols','vCols','cols'],['sRows','vRows','rows'],
+        ['sGrav','vGrav','grav'],['sDamp','vDamp','damp'],['sIter','vIter','iter'],
+        ['sStretch','vStretch','stretch'],['sComp','vComp','comp'],
+        ['sMR','vMR','mouseR'],['sMF','vMF','mouseF'],
+        ['sRW','vRW','roofW'],['sRG','vRG','roofGap'],['sSh','vSh','shadow']
+    ];
+    pairs.forEach(([slider,input,key])=>{
+        const s=document.getElementById(slider);
+        const v=document.getElementById(input);
+        s.addEventListener('input',()=>{v.value=s.value;S[key]=parseFloat(s.value);applyRoof()});
+        v.addEventListener('input',()=>{s.value=v.value;S[key]=parseFloat(v.value);applyRoof()});
+    });
 
-    window.addEventListener('resize', () => {
-      if(c && c.width) {
-        c.width = window.innerWidth;
-        c.height = window.innerHeight;
-        CONFIG.awidth = Math.min(CONFIG.width, c.width - 100);
-        CONFIG.aheight = Math.min(CONFIG.height, c.height - 100);
-        CONFIG.cellWidth = CONFIG.awidth/(CONFIG.gridW-1)
-        CONFIG.cellHeight = CONFIG.aheight/(CONFIG.gridH-1);
-      }
-    })
+    document.getElementById('rebuild').addEventListener('click',()=>init());
 
-    let rafID, input, c;
-    function main() {
-      fullCode = 'Black cats are mysterious and magical creatures that have captivated hearts for centuries. They are symbols of luck and good fortune. Their sleek dark fur glistens like midnight velvet. Their golden and green eyes pierce through the darkness. Every black cat holds a powerful wizard within. They have always been companions to witches. Only 13 percent of cats in the world are black. Their soft paws and gentle purrs calm the soul.';
-      const { awidth: width, aheight: height, gridW, gridH, gravity, damping, iterationsPerFrame, compressFactor, stretchFactor, cellWidth, cellHeight } = CONFIG;
-      
-      const charCanvases = {};
-      const fontSize = Math.max(12, cellHeight * 1.2);
-      for (const ch of new Set(fullCode)) {
-        if (ch === ' ') continue;
-        const off = document.createElement('canvas');
-        off.width = off.height = Math.ceil(fontSize * 1.4);
-        const octx = off.getContext('2d');
-        octx.font = `bold ${fontSize}px "Noto Sans JP", monospace`;
-        octx.textAlign = 'center';
-        octx.textBaseline = 'middle';
-        octx.fillStyle = '#9b59b6';
-        octx.fillText(ch, off.width / 2, off.height / 2);
-        charCanvases[ch] = off;
-      }
-      
-      // Add roof image
-      container.innerHTML = '';
-      const roofImg = document.createElement('img');
-      roofImg.src = 'images/roof.png';
-      roofImg.style.cssText = 'display:block;width:400px;height:auto;image-rendering:pixelated;margin-bottom:-30px;filter:drop-shadow(0 8px 12px rgba(0,0,0,0.7));position:relative;z-index:2;';
-      container.appendChild(roofImg);
-      
-      c = document.createElement('canvas');
-      container.appendChild(c);
-      c.width = window.innerWidth;
-      c.height = window.innerHeight;
-      const ctx = c.getContext('2d');
-      
-      const particles = [];
-      const constraints = [], verticalConstraints = [], horizontalConstraints = [];
-      const pinnedParticles = [];
-      
-      input = new Input({ c, particles });
-      
-      for(let i=0;i<gridW;i++) {
-        for(let j=0;j<gridH;j++) {
-          let x = i*cellWidth;
-          let y = j*cellHeight;
-          
-          const id = getPointID(j, i, gridH);
-          const pinned = j === 0;
-          
-          const charIndex = (i + j * gridW) % fullCode.length;
-          const char = fullCode[charIndex] || ' ';
-          
-          const particle = new Particle({ x, y, pinned, id, char })
-          particles.push(particle);
-          if(pinned) pinnedParticles.push(particle);
+    // === PHYSICS ===
+    class V{constructor(x=0,y=0){this.x=x;this.y=y}set(x,y){this.x=x;this.y=y}sub(v){return new V(this.x-v.x,this.y-v.y)}len(){return Math.hypot(this.x,this.y)}ang(){return Math.atan2(this.y,this.x)}}
+    class P{constructor(x,y,pin,ch){this.pos=new V(x,y);this.old=new V(x,y);this.acc=new V();this.pin=pin;this.ch=ch;this.down=null}
+        update(dt){if(this.pin){this.acc.set(0,0);return}const vx=(this.pos.x-this.old.x)*S.damp,vy=(this.pos.y-this.old.y)*S.damp;this.old.set(this.pos.x,this.pos.y);const d=dt*dt;this.acc.y+=S.grav/d;this.pos.x+=vx+this.acc.x*d;this.pos.y+=vy+this.acc.y*d;this.acc.set(0,0)}}
+    class Cn{constructor(a,b,len,comp,stretch){this.a=a;this.b=b;this.len=len;this.min=len*comp;this.max=len*stretch}
+        solve(){const dx=this.b.pos.x-this.a.pos.x,dy=this.b.pos.y-this.a.pos.y,d=Math.hypot(dx,dy);if(d===0)return;let t=this.len;if(d<this.min)t=this.min;else if(d>this.max)t=this.max;else return;const p=(t-d)/d/2;if(!this.a.pin){this.a.pos.x-=dx*p;this.a.pos.y-=dy*p}if(!this.b.pin){this.b.pos.x+=dx*p;this.b.pos.y+=dy*p}}}
+
+    // === TEXT ===
+    const TEXT='Black cats are mysterious and magical creatures that have captivated hearts for centuries. They are symbols of luck and good fortune. Their sleek dark fur glistens like midnight velvet. Their golden and green eyes pierce through the darkness. Every black cat holds a powerful wizard within. They have always been companions to witches. Only 13 percent of cats in the world are black. Their soft paws and gentle purrs calm the soul.';
+    let canvas,ctx,particles,constraints,charImgs;
+
+    function init(){
+        S.aw=parseFloat(document.getElementById('vW').value);
+        S.ah=parseFloat(document.getElementById('vH').value);
+        S.cols=parseInt(document.getElementById('vCols').value);
+        S.rows=parseInt(document.getElementById('vRows').value);
+
+        const cont=document.getElementById('container');
+        cont.innerHTML='';
+
+        // Roof
+        const roof=document.createElement('img');
+        roof.src='images/roof.png';
+        roof.style.cssText=`display:block;width:${S.roofW}px;height:auto;image-rendering:pixelated;margin-bottom:${S.roofGap}px;filter:drop-shadow(0 ${S.shadow}px ${S.shadow+4}px rgba(0,0,0,0.7));position:relative;z-index:2`;
+        cont.appendChild(roof);
+
+        // Canvas
+        canvas=document.createElement('canvas');
+        cont.appendChild(canvas);
+        canvas.width=S.aw;canvas.height=S.ah;
+        ctx=canvas.getContext('2d');
+
+        particles=[];constraints=[];charImgs={};
+        const fontSize=Math.max(8,S.ah/S.rows*1.1);
+        const cellW=S.aw/(S.cols-1),cellH=S.ah/(S.rows-1);
+
+        // Pre-render chars
+        for(const ch of new Set(TEXT)){
+            if(ch===' ')continue;
+            const off=document.createElement('canvas');
+            const s=Math.ceil(fontSize*1.4);
+            off.width=off.height=s;
+            const oc=off.getContext('2d');
+            oc.font=`${fontSize}px "Noto Sans JP",sans-serif`;
+            oc.textAlign='center';oc.textBaseline='middle';
+            oc.fillStyle='#9b59b6';
+            oc.fillText(ch,s/2,s/2);
+            charImgs[ch]=off;
         }
-      }
-      
-      for(let i=0;i<gridW;i++) {
-        for(let j=0;j<gridH;j++) {
-          const id = getPointID(j, i, gridH);
-          const p = particles[id];
 
-          if(j<gridH-1) {
-            const bottomP = particles[getPointID(j+1, i, gridH)];
-            const c = new Constraint({p1: p, p2: bottomP, length: cellHeight, id: id+gridW*gridH, compressFactor, stretchFactor});
-            constraints.push(c);
-            p.downConstraint = c;
-          }
-          if(i<gridW-1) {
-            const rightP = particles[getPointID(j, i+1, gridH)];
-            
-            const hc = new Constraint({
-              p1: p, 
-              p2: rightP, 
-              length: cellWidth, 
-              id: id+gridW*gridH*2, 
-              compressFactor: 0.6,
-              stretchFactor: 4,
-              isSpacer: true
-            });
-            
-            constraints.push(hc);
-            horizontalConstraints.push(hc);
-          }
-        }
-      }
-      
-      function drawCode() {
-        const offset = [c.width/2-width/2,c.height/2-height/2 - 30];
-        particles.forEach(p => {
-          if (p.char && p.char !== " ") {
-            const constraint = p.downConstraint;
-            let angle = 0;
-            
-            const img = charCanvases[p.char];
-            if (!img) return;
-            const half = img.width / 2;
-            
-            let cos = 1, sin = 0;
-
-            if (constraint) {
-              const dx = constraint.p2.pos.x - constraint.p1.pos.x;
-              const dy = constraint.p2.pos.y - constraint.p1.pos.y;
-              angle = Math.atan2(dy, dx) - Math.PI / 2;
-              cos = Math.cos(angle);
-              sin = Math.sin(angle);
+        // Grid
+        for(let i=0;i<S.cols;i++){
+            for(let j=0;j<S.rows;j++){
+                const x=i*cellW,y=j*cellH;
+                const pin=j===0;
+                const ci=(i+j*S.cols)%TEXT.length;
+                particles.push(new P(x,y,pin,TEXT[ci]||' '));
             }
-
-            ctx.setTransform(cos, sin, -sin, cos, p.pos.x+offset[0], p.pos.y+offset[1]);
-            ctx.drawImage(img, -half, -half);
-          }
-        });
-      }
-      
-      let lastDelta = 0;
-      function runloop(delta) {
-        rafID = requestAnimationFrame(runloop);
-        
-        ctx.save();
-        ctx.clearRect(0,0,c.width,c.height);
-        
-        particles.forEach(p=>p.update(delta-lastDelta));
-        lastDelta = delta;
-        
-        for(let i=0;i<iterationsPerFrame;i++) {
-          for(let j=0;j<constraints.length;j++) constraints[j].solve();
         }
-        
-        if(CONFIG.contain) particles.forEach(p=>p.contain());
-        
-        drawCode();
-        
-        ctx.restore();
-      }
-      rafID = requestAnimationFrame(runloop);
+
+        // Constraints
+        for(let i=0;i<S.cols;i++){
+            for(let j=0;j<S.rows;j++){
+                const idx=j*S.cols+i;
+                const p=particles[idx];
+                if(j<S.rows-1){
+                    const b=particles[(j+1)*S.cols+i];
+                    const c=new Cn(p,b,cellH,S.comp,S.stretch);
+                    constraints.push(c);p.down=c;
+                }
+                if(i<S.cols-1){
+                    constraints.push(new Cn(p,particles[j*S.cols+i+1],cellW,.6,4));
+                }
+            }
+        }
+
+        // Mouse
+        let mx=0,my=0,grabbed=null;
+        canvas.onpointerdown=e=>{const r=canvas.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top;
+            for(const p of particles){if(Math.hypot(mx-p.pos.x,my-p.pos.y)<20){grabbed=p;grabbed._pin=grabbed.pin;grabbed.pin=true;break}}};
+        canvas.onpointerup=()=>{if(grabbed){grabbed.pin=grabbed._pin;grabbed=null}};
+        canvas.onpointermove=e=>{const r=canvas.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top;
+            if(grabbed){grabbed.pos.set(mx,my);grabbed.old.set(mx,my)}
+            for(const p of particles){const dx=mx-p.pos.x,dy=my-p.pos.y,ls=dx*dx+dy*dy;
+                if(ls<S.mouseR&&ls>0){const a=Math.atan2(dy,dx)-Math.PI,s=Math.max(0,1-ls/S.mouseR)*S.mouseF/300;p.acc.x+=Math.cos(a)*s;p.acc.y+=Math.sin(a)*s}}};
+        canvas.oncontextmenu=e=>e.preventDefault();
+
+        // Loop
+        let last=0;
+        function loop(t){
+            requestAnimationFrame(loop);
+            const dt=t-last;last=t;
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            particles.forEach(p=>p.update(dt));
+            for(let i=0;i<S.iter;i++)constraints.forEach(c=>c.solve());
+            particles.forEach(p=>{
+                if(!p.ch||p.ch===' ')return;
+                const con=p.down;let cos=1,sin=0;
+                if(con){const dx=con.b.pos.x-con.a.pos.x,dy=con.b.pos.y-con.a.pos.y,a=Math.atan2(dy,dx)-Math.PI/2;cos=Math.cos(a);sin=Math.sin(a)}
+                const img=charImgs[p.ch];if(!img)return;
+                ctx.setTransform(cos,sin,-sin,cos,p.pos.x,p.pos.y);
+                ctx.drawImage(img,-img.width/2,-img.height/2);
+            });
+            ctx.setTransform(1,0,0,1,0,0);
+        }
+        requestAnimationFrame(loop);
     }
 
-    class Input {
-      constructor({ c, particles }) {
-        this.c = c, this.particles = particles;
-        this.mousePos = new Vec2();
-        this.grabRadius = 20;
-        this.grabbed;
-        this.bind()
-      }
-      pointerdown(e) {
-        const rect = this.rect;
-        this.mousePos.x = e.clientX - c.width/2 + CONFIG.awidth/2;
-        this.mousePos.y = e.clientY - c.height/2 + CONFIG.aheight/2;
-
-        for (const p of this.particles) {
-          if (this.mousePos.subtractNew(p.pos).length < this.grabRadius) {
-            this.grabbedParticle = p;
-            this.grabbedParticle.originalPinnedState = this.grabbedParticle.pinned;
-            this.grabbedParticle.pinned = true;
-            break;
-          }
+    function applyRoof(){
+        const roof=document.querySelector('#container img');
+        if(roof){
+            roof.style.width=S.roofW+'px';
+            roof.style.marginBottom=S.roofGap+'px';
+            roof.style.filter=`drop-shadow(0 ${S.shadow}px ${S.shadow+4}px rgba(0,0,0,0.7))`;
         }
-        if(!this.grabbedParticle) {
-          this.pointerIsDown = true
-        }
-      }
-      pointerup(e) {
-        if (this.grabbedParticle) {
-          this.grabbedParticle.pinned = this.grabbedParticle.originalPinnedState;
-          this.grabbedParticle = null;
-        }
-        clearTimeout(this.pointerUpTimer)
-        this.pointerUpTimer = setTimeout(() => {
-          this.pointerIsDown = false
-        }, 1000)
-      }
-      pointermove(e) {
-        const rect = this.rect;
-        this.mousePos.x = e.clientX - c.width/2 + CONFIG.awidth/2;
-        this.mousePos.y = e.clientY - c.height/2 + CONFIG.aheight/2;
-
-        if (this.grabbedParticle) {
-          this.grabbedParticle.pos.reset(this.mousePos.x, this.mousePos.y);
-          this.grabbedParticle.oldPos.reset(this.mousePos.x, this.mousePos.y); 
-        }
-          for (const p of this.particles) {
-            const diff = this.mousePos.subtractNew(p.pos);
-            const ls = diff.lengthSquared
-            if(ls < CONFIG.mouseSize) {
-              const a = diff.angle-Math.PI;
-              const strength = smoothstep(CONFIG.mouseSize, -2000, ls)*CONFIG.mouseStrength/300;
-              
-              const force = new Vec2(Math.cos(a)*strength, Math.sin(a)*strength);
-              p.applyForce(force)
-          }
-      }
-      }
-      contextmenu(e) {
-        e.preventDefault();
-      }
-      get rect() {
-        const rect = this.c.getBoundingClientRect();
-        rect.scale = rect.width/this.c.width;
-        return rect;
-      }
-      bind() {
-        this.pointerdown=this.pointerdown.bind(this)
-        this.pointerup=this.pointerup.bind(this)
-        this.pointermove=this.pointermove.bind(this)
-        this.contextmenu=this.contextmenu.bind(this)
-        document.addEventListener('pointerdown', this.pointerdown)
-        document.addEventListener('pointerup', this.pointerup)
-        document.addEventListener('pointermove', this.pointermove)
-        document.addEventListener('contextmenu', this.contextmenu)
-      }
     }
 
-    class Vec2 {
-      constructor(x=0, y=0) {
-        this.reset(x,y)
-      }
-      zero() {
-        this.reset(0,0)
-      }
-      reset(x=0, y=0) {
-        this.x = x;
-        this.y = y;
-      }
-      clone() {
-        return new Vec2(this.x, this.y);
-      }
-      add(v) {
-        this.x += v.x;
-        this.y += v.y;
-        return this;
-      }
-      addNew(v) {
-        return this.clone().add(v);
-      }
-      subtract(v) {
-        this.x -= v.x;
-        this.y -= v.y;
-        return this;
-      }
-      subtractNew(v) {
-        return this.clone().subtract(v);
-      }
-      multiply(v) {
-        this.x *= v.x;
-        this.y *= v.y;
-        return this;
-      }
-      multiplyNew(v) {
-        return this.clone().multiply(v);
-      }
-      scale(scalar) {
-        this.x *= scalar;
-        this.y *= scalar;
-        return this;
-      }
-      scaleNew(scalar) {
-        return this.clone().scale(scalar);
-      }
-      
-      get array() {
-        return [this.x, this.y];
-      }
-      get lengthSquared() {
-        return this.x**2 + this.y**2;
-      }
-      get length() {
-        return Math.hypot(this.x, this.y);
-      }
-      get angle() {
-        return Math.atan2(this.y, this.x);
-      }
-      
-      [Symbol.iterator]() {
-        let values = this.array;
-        let i = 0;
-        return {
-          next() {
-            if(i < values.length) {
-              let value = values[i];
-              i++;
-              return { value, done: false }
-            } else return { done: true }
-          }
-        }
-      }
-    }
-
-    class Particle {
-      constructor({x, y, pinned, id, char}={}) {
-        this.pos = new Vec2(x, y);
-        this.oldPos = new Vec2(x, y);
-        this.velocity = new Vec2()
-        this.acceleration = new Vec2();
-        this.pinned = pinned;
-        this.id = id;
-        this.char = char;
-        this.gravityVec = new Vec2();
-      }
-      contain() {
-        if(this.pinned) return;
-        const radius = 5;
-        
-        if (this.pos.x < radius) {
-          this.pos.x = radius;
-          this.oldPos.x = this.pos.x + Math.abs(this.oldPos.x - this.pos.x) * 0.8;
-        } else if (this.pos.x > CONFIG.awidth - radius) {
-          this.pos.x = CONFIG.awidth - radius;
-          this.oldPos.x = this.pos.x - Math.abs(this.oldPos.x - this.pos.x) * 0.8;
-        }
-        if (this.pos.y < radius) {
-            this.pos.y = radius;
-            this.oldPos.y = this.pos.y + Math.abs(this.oldPos.y - this.pos.y) * 0.8;
-        } else if (this.pos.y > CONFIG.aheight - radius) {
-            this.pos.y = CONFIG.aheight - radius;
-            this.oldPos.y = this.pos.y - Math.abs(this.oldPos.y - this.pos.y) * 0.8;
-        }
-      }
-      update(delta) {
-        if(this.pinned) {
-          this.acceleration.zero();
-          return;
-        }
-        
-        this.velocity.reset(
-          (this.pos.x - this.oldPos.x) * CONFIG.damping,
-          (this.pos.y - this.oldPos.y) * CONFIG.damping
-        );
-        
-        this.oldPos.reset(...this.pos);
-        
-        const dd = delta**2;
-        this.gravityVec.reset(0,CONFIG.gravity/dd)
-        
-        this.applyForce(this.gravityVec)
-        
-        this.pos.x += this.velocity.x + this.acceleration.x * dd;
-        this.pos.y += this.velocity.y + this.acceleration.y * dd;
-        
-        this.acceleration.reset();
-      }
-      applyForce(v) {
-        this.acceleration.add(v);
-      }
-    }
-
-    class Constraint {
-      constructor({p1, p2, length, id, compressFactor, stretchFactor}) {
-        this.p1 = p1;
-        this.p2 = p2;
-        this.length = length;
-        this.id=id;
-        this.minLength = length * compressFactor;
-        this.maxLength = length * stretchFactor;
-        
-        c.addEventListener("update", (e) => {
-          this.minLength = this.length * (this.isSpacer ? compressFactor : e.detail.compressFactor);
-          this.maxLength = this.length * (this.isSpacer ? stretchFactor : e.detail.stretchFactor);
-        })
-      }
-      solve() {
-        const dx = this.p2.pos.x - this.p1.pos.x;
-        const dy = this.p2.pos.y - this.p1.pos.y;
-        const distance = Math.hypot(dx, dy);
-
-        if (distance == 0) return;
-
-        let targetLength = this.length;
-        if (distance < this.minLength) targetLength = this.minLength;
-        else if (distance > this.maxLength) targetLength = this.maxLength;
-        else return;
-
-        const difference = targetLength - distance;
-        const percent = difference / distance / 2;
-
-        const offsetX = dx * percent;
-        const offsetY = dy * percent;
-
-        if (!this.p1.pinned) {
-          this.p1.pos.x -= offsetX;
-          this.p1.pos.y -= offsetY;
-        }
-        if (!this.p2.pinned) {
-          this.p2.pos.x += offsetX;
-          this.p2.pos.y += offsetY;
-        }
-      }
-    }
-
-    setTimeout(() => main(), 500);
+    setTimeout(init,200);
     </script>
 </body>
 </html>
