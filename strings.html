@@ -26,6 +26,7 @@
             border: 1px solid rgba(155, 89, 182, 0.2);
             position: relative;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             touch-action: none;
@@ -100,8 +101,14 @@
         charCanvases[ch] = off;
       }
       
-      c = document.createElement('canvas');
+      // Add roof image
       container.innerHTML = '';
+      const roofImg = document.createElement('img');
+      roofImg.src = 'images/roof.png';
+      roofImg.style.cssText = 'display:block;width:100%;max-width:500px;height:auto;image-rendering:pixelated;';
+      container.appendChild(roofImg);
+      
+      c = document.createElement('canvas');
       container.appendChild(c);
       c.width = window.innerWidth;
       c.height = window.innerHeight;
