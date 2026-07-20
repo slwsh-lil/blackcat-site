@@ -95,9 +95,9 @@ a{text-decoration:none;color:inherit}
 .hero3d-object{
     position:relative;
     display:flex;
-    align-items:center;
+    align-items:flex-start;
     justify-content:center;
-    min-height:500px;
+    min-height:430px;
 }
 .hero3d-shadow{
     position:absolute;

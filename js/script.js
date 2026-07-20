@@ -144,8 +144,8 @@
 // ---- Hero 3D Interaction (Enhanced) ----
 !function(){
     const obj=document.getElementById('hero3dObject');
-    const img=document.getElementById('hero3dImg');
-    if(!obj||!img)return;
+    const obj=document.getElementById('hero3dObject');
+    if(!obj)return;
     
     let mx=0,my=0,cx=0,cy=0,scrollPos=0;
     const cfg={parallax:14,float:10,speed:.001,ease:.065,maxTilt:10};
@@ -194,12 +194,12 @@
     
     // Hover glow
     obj.addEventListener('mouseenter',()=>{
-        img.style.transition='filter .5s cubic-bezier(.4,0,.2,1)';
-        img.style.filter='drop-shadow(0 40px 80px rgba(0,0,0,.6)) drop-shadow(0 0 60px rgba(155,89,182,.4))';
+        obj.style.transition='filter .5s cubic-bezier(.4,0,.2,1)';
+        obj.style.filter='drop-shadow(0 40px 80px rgba(0,0,0,.6)) drop-shadow(0 0 60px rgba(155,89,182,.4))';
     });
     obj.addEventListener('mouseleave',()=>{
-        img.style.transition='filter .8s cubic-bezier(.4,0,.2,1)';
-        img.style.filter='drop-shadow(0 30px 60px rgba(0,0,0,.5)) drop-shadow(0 0 40px rgba(155,89,182,.2))';
+        obj.style.transition='filter .8s cubic-bezier(.4,0,.2,1)';
+        obj.style.filter='drop-shadow(0 30px 60px rgba(0,0,0,.5)) drop-shadow(0 0 40px rgba(155,89,182,.2))';
     });
 }();
 
@@ -307,7 +307,7 @@ document.querySelectorAll('.btn').forEach(btn=>{
 
 // ---- Hero Entrance Animation ----
 !function(){
-    const img=document.getElementById('hero3dImg');
+    const obj=document.getElementById('hero3dObject');
     const textElements=document.querySelectorAll('.hero3d-text > *');
     if(!img)return;
     
@@ -316,7 +316,7 @@ document.querySelectorAll('.btn').forEach(btn=>{
     img.style.transform='translateY(80px) scale(.85)';
     
     setTimeout(()=>{
-        img.style.transition='opacity 1.4s cubic-bezier(.16,1,.3,1), transform 1.4s cubic-bezier(.16,1,.3,1)';
+        obj.style.transition='opacity 1.4s cubic-bezier(.16,1,.3,1), transform 1.4s cubic-bezier(.16,1,.3,1)';
         img.style.opacity='1';
         img.style.transform='translateY(0) scale(1)';
     },400);
